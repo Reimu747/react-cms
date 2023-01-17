@@ -1,3 +1,4 @@
+import LoginPage from '@/view/LoginPage';
 import { lazy, Suspense } from 'react';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
@@ -25,6 +26,10 @@ export default createBrowserRouter([
             { path: '/page2/page4', element: withLoadingComponent(<Page4 />) },
             { path: '/about', element: withLoadingComponent(<About />) },
         ],
+    },
+    {
+        path: '/login',
+        element: <LoginPage />
     },
     {
         path: '*',

@@ -1,0 +1,21 @@
+.login-page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-container {
+    min-width: 35rem;
+    min-height: 40rem;
+    border-radius: 10px;
+    box-shadow: 3px 3px 5px 5px;
+}
+.login-title {
+    font-size: 2rem;
+    text-align: center;
+    padding: 8rem 0 6rem 0;
+}
+:global(.ant-form-item) {
+    margin-bottom: 2rem;
+}
