@@ -1,6 +1,10 @@
 import styles from './index.module.scss';
-import { theme, Button, Checkbox, Form, Input, Space } from 'antd';
+import { theme, Button, Checkbox, Form, Input, message } from 'antd';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import useSWRMutation from 'swr/mutation';
+import { postFetcher } from '@/swr/swrConfig';
+import { useBeforeRouterEnter } from '@/hooks/useBeforeRouterEnter';
 
 const { useToken } = theme;
 
@@ -13,9 +17,25 @@ const LoginPage: React.FC = () => {
     const { token } = useToken();
     const { colorPrimary, colorBgContainer } = token;
     const [form] = Form.useForm();
+    const navigateTo = useNavigate();
+    const { trigger, isMutating } = useSWRMutation('https://mock.apifox.cn/m1/2150034-0-default/login', postFetcher);
 
-    const onFinish = (values: { username: string; password: string; remember: boolean }) => {
-        console.log('Success:', values);
+    useBeforeRouterEnter(true);
+
+    const onFinish = async (values: { username: string; password: string; remember: boolean }) => {
+        // 验证username password
+        const { username, password } = values;
+        const res = await trigger({ username, password });
+        const { code } = res;
+
+        if (code === 200 && res.data) {
+            const { data = {} } = res;
+            const { token: tokenId, user } = data;
+            navigateTo('/', { state: { user } });
+            localStorage.setItem('token', JSON.stringify({ tokenId, timestamp: new Date().getTime() }));
+        } else {
+            message.error(res?.message);
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -51,7 +71,7 @@ const LoginPage: React.FC = () => {
                         <Checkbox>记住我</Checkbox>
                     </Form.Item>
                     <Form.Item wrapperCol={wrapperCol}>
-                        <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                        <Button type="primary" htmlType="submit" style={{ width: '100%' }} loading={isMutating}>
                             登录
                         </Button>
                     </Form.Item>
