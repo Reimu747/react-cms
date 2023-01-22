@@ -1,9 +1,9 @@
 import { useBeforeRouterEnter } from '@/hooks/useBeforeRouterEnter';
 
-const About: React.FC = () => {
+const AdminPage: React.FC = () => {
     useBeforeRouterEnter(false);
 
-    return <div>About</div>;
+    return <div>AdminPage</div>;
 };
 
-export default About;
+export default AdminPage;

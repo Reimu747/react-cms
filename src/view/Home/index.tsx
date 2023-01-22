@@ -10,16 +10,23 @@ const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[]): MenuItem {
+function getItem(label: React.ReactNode, key: React.Key, children?: MenuItem[]): MenuItem {
     return {
         key,
-        icon,
         children,
         label,
     } as MenuItem;
 }
 
-const items: MenuItem[] = [getItem('首页', '/homepage'), getItem('关于', '/about')];
+const items: MenuItem[] = [
+    getItem('首页', '/homepage'),
+    getItem('权限页', '/rolepage', [
+        getItem('游客页', '/guestpage'),
+        getItem('管理员页', '/adminpage'),
+        getItem('超级管理员页', '/superadminpage'),
+    ]),
+    getItem('关于', '/about'),
+];
 
 const Home: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -49,14 +56,14 @@ const Home: React.FC = () => {
     }, [pathname]);
     // 渲染面包屑子元素
     const breadcrumbItem = (): JSX.Element[] => {
-        const path = pathname.split('/').splice(1);
+        const path = pathname.split('/').slice(1);
         return path.map((pathName: string, index: number) => (
             <Breadcrumb.Item key={index}>
-                <Link to={pathName}>{pathName}</Link>
+                <Link to={pathname}>{pathName}</Link>
             </Breadcrumb.Item>
         ));
     };
-    // 点击头像回调
+    // 点击头像回调 - 退出登录
     const handleAvatarClick = () => {
         Modal.info({
             title: '退出登录？',
