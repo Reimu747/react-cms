@@ -2,7 +2,7 @@ import { useBeforeRouterEnter } from '@/hooks/useBeforeRouterEnter';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { increment } from '@/store/slice/countSlice';
 
-const View: React.FC = () => {
+const HomePage: React.FC = () => {
     const count = useAppSelector(state => state.countReducer.count);
     const dispatch = useAppDispatch();
     const onIncrement = () => dispatch(increment(5));
@@ -19,4 +19,4 @@ const View: React.FC = () => {
     );
 };
 
-export default View;
+export default HomePage;

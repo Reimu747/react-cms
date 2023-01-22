@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import type { MenuProps } from 'antd';
+import { Avatar, MenuProps, Modal } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation, Link } from 'react-router-dom';
+import styles from './index.module.scss';
+import { LOGIN_PATH, TOKEN_KEY } from '@/types/variable';
+import { useUser } from '@/hooks/useUser';
+
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -15,11 +19,7 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
     } as MenuItem;
 }
 
-const items: MenuItem[] = [
-    getItem('Page 1', '/page1'),
-    getItem('Page 2', '/page2', undefined, [getItem('Page 3', '/page3'), getItem('Page 4', '/page4')]),
-    getItem('About', '/about'),
-];
+const items: MenuItem[] = [getItem('首页', '/homepage'), getItem('关于', '/about')];
 
 const Home: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -27,6 +27,8 @@ const Home: React.FC = () => {
         token: { colorBgContainer },
     } = theme.useToken();
     const navigateTo = useNavigate();
+    const { user, avatar } = useUser();
+    // 点击左侧菜单回调
     const handleMenuClick = (e: { keyPath: string[] }) => {
         const { keyPath } = e;
         navigateTo(keyPath.reduceRight((pre, cur) => pre + cur));
@@ -45,11 +47,32 @@ const Home: React.FC = () => {
         }
         return [];
     }, [pathname]);
+    // 渲染面包屑子元素
+    const breadcrumbItem = (): JSX.Element[] => {
+        const path = pathname.split('/').splice(1);
+        return path.map((pathName: string, index: number) => (
+            <Breadcrumb.Item key={index}>
+                <Link to={pathName}>{pathName}</Link>
+            </Breadcrumb.Item>
+        ));
+    };
+    // 点击头像回调
+    const handleAvatarClick = () => {
+        Modal.info({
+            title: '退出登录？',
+            onOk() {
+                // 清理token
+                localStorage.removeItem(TOKEN_KEY);
+                // 跳转至登录页
+                navigateTo(LOGIN_PATH);
+            },
+        });
+    };
 
     return (
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout className={styles.layout}>
             <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
-                <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
+                <div className={styles.logo} />
                 <Menu
                     theme="dark"
                     defaultSelectedKeys={defaultSelectedKeys}
@@ -60,18 +83,14 @@ const Home: React.FC = () => {
                 />
             </Sider>
             <Layout>
-                <Header style={{ paddingLeft: '1rem', background: colorBgContainer }}>
-                    <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>User</Breadcrumb.Item>
-                        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                    </Breadcrumb>
+                <Header style={{ background: colorBgContainer }} className={styles.header}>
+                    <Breadcrumb className={styles.breadcrumb}>{breadcrumbItem()}</Breadcrumb>
+                    <Avatar size="large" src={avatar} alt={user} onClick={handleAvatarClick} />
                 </Header>
-                <Content style={{ margin: '1rem' }}>
-                    <div style={{ padding: '2rem', minHeight: '40rem', background: colorBgContainer }}>
-                        <Outlet />
-                    </div>
+                <Content className={styles.content} style={{ background: colorBgContainer }}>
+                    <Outlet />
                 </Content>
-                <Footer style={{ textAlign: 'center' }}></Footer>
+                <Footer className={styles.footer}>React cms</Footer>
             </Layout>
         </Layout>
     );

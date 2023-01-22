@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import useSWRMutation from 'swr/mutation';
 import { postFetcher } from '@/swr/swrConfig';
 import { useBeforeRouterEnter } from '@/hooks/useBeforeRouterEnter';
+import { ResponseImpl } from '@/types/request';
+import UserImpl from '@/types/user';
+import { useAppDispatch } from '@/store/hooks';
+import { setUser } from '@/store/slice/userSlice';
+import { HOME_PATH, TOKEN_KEY } from '@/types/variable';
 
 const { useToken } = theme;
 
@@ -21,18 +26,36 @@ const LoginPage: React.FC = () => {
     const { trigger, isMutating } = useSWRMutation('https://mock.apifox.cn/m1/2150034-0-default/login', postFetcher);
 
     useBeforeRouterEnter(true);
+    const dispatch = useAppDispatch();
+    const onSetUser = (data: Partial<UserImpl>) => {
+        const { user, avatar } = data;
+        dispatch(
+            setUser({
+                user,
+                avatar,
+            })
+        );
+    };
 
     const onFinish = async (values: { username: string; password: string; remember: boolean }) => {
         // 验证username password
         const { username, password } = values;
-        const res = await trigger({ username, password });
+        const res: ResponseImpl<UserImpl> = await trigger({ username, password });
         const { code } = res;
 
         if (code === 200 && res.data) {
-            const { data = {} } = res;
-            const { token: tokenId, user } = data;
-            navigateTo('/', { state: { user } });
-            localStorage.setItem('token', JSON.stringify({ tokenId, timestamp: new Date().getTime() }));
+            const { data } = res;
+            const { token: tokenId = '', user = '', avatar = '' } = data;
+            navigateTo(HOME_PATH);
+            // 设置local storage
+            localStorage.setItem(TOKEN_KEY, JSON.stringify({
+                tokenId,
+                timestamp: new Date().getTime(),
+                user,
+                avatar,
+            }));
+            // 设置redux用户信息
+            onSetUser({ user, avatar });
         } else {
             message.error(res?.message);
         }
