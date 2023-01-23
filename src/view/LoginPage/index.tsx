@@ -10,6 +10,7 @@ import UserImpl from '@/types/user';
 import { useAppDispatch } from '@/store/hooks';
 import { setUser } from '@/store/slice/userSlice';
 import { GUEST_ROLE, HOME_PATH, TOKEN_KEY } from '@/types/variable';
+import { LOGIN_API } from '@/types/variable';
 
 const { useToken } = theme;
 
@@ -23,7 +24,7 @@ const LoginPage: React.FC = () => {
     const { colorPrimary, colorBgContainer } = token;
     const [form] = Form.useForm();
     const navigateTo = useNavigate();
-    const { trigger, isMutating } = useSWRMutation('https://mock.apifox.cn/m1/2150034-0-default/login', postFetcher);
+    const { trigger, isMutating } = useSWRMutation(LOGIN_API, postFetcher);
 
     useBeforeRouterEnter(true);
     const dispatch = useAppDispatch();

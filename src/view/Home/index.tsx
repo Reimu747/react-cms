@@ -1,32 +1,13 @@
-import React, { useMemo, useState } from 'react';
-import { Avatar, MenuProps, Modal } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import React, { useState } from 'react';
+import { Avatar, Modal } from 'antd';
+import { Breadcrumb, Layout, theme } from 'antd';
 import { useNavigate, Outlet, useLocation, Link } from 'react-router-dom';
 import styles from './index.module.scss';
 import { LOGIN_PATH, TOKEN_KEY } from '@/types/variable';
 import { useUser } from '@/hooks/useUser';
+import Menu from './Menu';
 
 const { Header, Content, Footer, Sider } = Layout;
-
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(label: React.ReactNode, key: React.Key, children?: MenuItem[]): MenuItem {
-    return {
-        key,
-        children,
-        label,
-    } as MenuItem;
-}
-
-const items: MenuItem[] = [
-    getItem('首页', '/homepage'),
-    getItem('权限页', '/rolepage', [
-        getItem('游客页', '/guestpage'),
-        getItem('管理员页', '/adminpage'),
-        getItem('超级管理员页', '/superadminpage'),
-    ]),
-    getItem('关于', '/about'),
-];
 
 const Home: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
@@ -35,25 +16,8 @@ const Home: React.FC = () => {
     } = theme.useToken();
     const navigateTo = useNavigate();
     const { user, avatar } = useUser();
-    // 点击左侧菜单回调
-    const handleMenuClick = (e: { keyPath: string[] }) => {
-        const { keyPath } = e;
-        navigateTo(keyPath.reduceRight((pre, cur) => pre + cur));
-    };
     const { pathname } = useLocation();
-    // 默认选中菜单项，根据路由设置
-    const defaultSelectedKeys: string[] = useMemo(() => {
-        const splitArr = pathname.split('/');
-        return [`/${splitArr[splitArr.length - 1]}`];
-    }, [pathname]);
-    // 默认展开菜单项，根据路由设置
-    const defaultOpenKeys: string[] = useMemo(() => {
-        const splitArr = pathname.split('/');
-        if (splitArr.length > 2) {
-            return [`/${pathname.split('/')[1]}`];
-        }
-        return [];
-    }, [pathname]);
+
     // 渲染面包屑子元素
     const breadcrumbItem = (): JSX.Element[] => {
         const path = pathname.split('/').slice(1);
@@ -80,14 +44,7 @@ const Home: React.FC = () => {
         <Layout className={styles.layout}>
             <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
                 <div className={styles.logo} />
-                <Menu
-                    theme="dark"
-                    defaultSelectedKeys={defaultSelectedKeys}
-                    defaultOpenKeys={defaultOpenKeys}
-                    mode="inline"
-                    items={items}
-                    onClick={handleMenuClick}
-                />
+                <Menu />
             </Sider>
             <Layout>
                 <Header style={{ background: colorBgContainer }} className={styles.header}>
