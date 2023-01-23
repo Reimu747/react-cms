@@ -1,5 +1,5 @@
 import styles from './index.module.scss';
-import { theme, Button, Checkbox, Form, Input, message } from 'antd';
+import { theme, Button, Form, Input, message } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWRMutation from 'swr/mutation';

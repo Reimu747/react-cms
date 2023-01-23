@@ -1,29 +1,23 @@
-import { RoleMapElementImpl } from './shared';
+import { PageUrl, RoleMapElementImpl } from './shared';
 // 全局变量
 
 // 权限相关
 // 游客权限
 export const GUEST_ROLE = 'guest';
 // 权限表
+const GUEST_PERMISSIONS: PageUrl[] = ['/homepage', '/rolepage/guestpage', '/about', '/404'];
 export const ROLE_MAP: RoleMapElementImpl[] = [
     {
         role: 'guest',
-        permissions: ['/', '/homepage', '/rolepage/guestpage', '/about'],
+        permissions: GUEST_PERMISSIONS,
     },
     {
         role: 'admin',
-        permissions: ['/', '/homepage', '/rolepage/guestpage', '/rolepage/adminpage', '/about'],
+        permissions: GUEST_PERMISSIONS.concat(['/rolepage/adminpage']),
     },
     {
         role: 'superAdmin',
-        permissions: [
-            '/',
-            '/homepage',
-            '/rolepage/guestpage',
-            '/rolepage/adminpage',
-            '/rolepage/superadminpage',
-            '/about',
-        ],
+        permissions: GUEST_PERMISSIONS.concat(['/rolepage/adminpage', '/rolepage/superadminpage']),
     },
 ];
 
@@ -35,7 +29,9 @@ export const TOKEN_KEY = 'token';
 export const LOGIN_PATH = '/login';
 // 首页路由
 export const HOME_PATH = '/';
-// 路由表
+// 404路由
+export const NOT_FOUND_PATH = '/404';
+// 菜单 - 路由表
 export const ROUTER_MAP: { label: string; key: string }[] = [
     { label: '首页', key: '/homepage' },
     { label: '权限页', key: '/rolepage' },

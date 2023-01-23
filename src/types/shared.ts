@@ -11,6 +11,7 @@ export type PageUrl =
     | '/rolepage/superadminpage'
     | '/about'
     | '/login'
+    | '/404'
     | '*';
 // router
 export interface Router {
@@ -27,14 +28,3 @@ export interface RoleMapElementImpl {
     role: Role;
     permissions: PageUrl[];
 }
-
-// 菜单相关
-// 菜单节点类型
-export interface MenuItem {
-    id: number,
-    name: string,
-    children?: MenuItem[],
-    key: string,
-    icon?: string,
-    label: string,
-};

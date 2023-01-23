@@ -6,9 +6,10 @@ import { Router } from '@/types/shared';
 const Home = lazy(() => import('@/view/Home'));
 const About = lazy(() => import('@/view/About'));
 const HomePage = lazy(() => import('@/view/Home/HomePage'));
-const GuestPage = lazy(() => import('@/view/RolePage/guestPage'));
+const GuestPage = lazy(() => import('@/view/RolePage/GuestPage'));
 const AdminPage = lazy(() => import('@/view/RolePage/AdminPage'));
 const SuperAdminPage = lazy(() => import('@/view/RolePage/SuperAdminPage'));
+const NotFoundPage = lazy(() => import('@/view/NotFound'));
 
 const withLoadingComponent = (component: JSX.Element) => (
     <Suspense fallback={<div>Loading...</div>}>{component}</Suspense>
@@ -28,6 +29,7 @@ const router: Router[] = [
             { path: '/rolepage/adminpage', element: withLoadingComponent(<AdminPage />) },
             { path: '/rolepage/superadminpage', element: withLoadingComponent(<SuperAdminPage />) },
             { path: '/about', element: withLoadingComponent(<About />) },
+            { path: '/404', element: withLoadingComponent(<NotFoundPage />) },
         ],
     },
     {

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Menu as AntdMenu } from 'antd';
-import { MenuItem } from '@/types/shared';
+import { MenuItem } from '@/types/menuItem';
 import useSWR from 'swr';
 import { ResponseImpl } from '@/types/request';
 import { ROUTER_MAP } from '@/types/variable';
