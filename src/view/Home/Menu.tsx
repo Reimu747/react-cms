@@ -4,14 +4,16 @@ import { Menu as AntdMenu } from 'antd';
 import { MenuItem } from '@/types/menuItem';
 import useSWR from 'swr';
 import { ResponseImpl } from '@/types/request';
-import { ROUTER_MAP } from '@/types/variable';
-import { MENULIST_API } from '@/types/variable';
+import { ROUTER_MAP, MENULIST_API } from '@/types/variable';
+import { useUser } from '@/hooks/useUser';
+import { Role } from '@/types/shared';
 
 const Menu: React.FC = () => {
+    const { role } = useUser();
     // 获取菜单树接口
-    const { data: res, error, isLoading } = useSWR<ResponseImpl<MenuItem[]>>(MENULIST_API);
+    const { data: res, error, isLoading } = useSWR<ResponseImpl<MenuItem[]>>(MENULIST_API(role as Role));
     // 拼接菜单数据
-    const items = useMemo<MenuItem[]>(() => {
+    const menuItems: MenuItem[] = useMemo<MenuItem[]>(() => {
         if (isLoading || error || !res) {
             return [];
         }
@@ -19,7 +21,7 @@ const Menu: React.FC = () => {
             if (!items || !items.length) {
                 return [];
             }
-            return items.map(item => {
+            return items.map((item: MenuItem) => {
                 const children = item.children && item.children.length ? setItems(item.children) : undefined;
                 return {
                     ...item,
@@ -59,7 +61,7 @@ const Menu: React.FC = () => {
             defaultSelectedKeys={defaultSelectedKeys}
             defaultOpenKeys={defaultOpenKeys}
             mode="inline"
-            items={items}
+            items={menuItems}
             onClick={handleMenuClick}
         />
     );

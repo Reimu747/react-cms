@@ -1,10 +1,12 @@
-import { PageUrl, RoleMapElementImpl } from './shared';
+import { PageUrl, Role, RoleMapElementImpl } from './shared';
 // 全局变量
 
 // 权限相关
-// 游客权限
-export const GUEST_ROLE = 'guest';
-// 权限表
+// 权限字段
+export const GUEST_ROLE: Role = 'guest';
+export const ADMIN_ROLE: Role = 'admin';
+export const SUPER_ADMIN_ROLE: Role = 'superAdmin';
+// 角色权限表
 const GUEST_PERMISSIONS: PageUrl[] = ['/homepage', '/rolepage/guestpage', '/about', '/404'];
 export const ROLE_MAP: RoleMapElementImpl[] = [
     {
@@ -46,5 +48,9 @@ export const ROUTER_MAP: { label: string; key: string }[] = [
 export const DEV_PATH = 'https://mock.apifox.cn/m1/2150034-0-default';
 // 登录接口
 export const LOGIN_API = '/login';
-// 菜单树接口
-export const MENULIST_API = '/menuList';
+/**
+ * 返回菜单树接口 api
+ * @param role 当前角色
+ * @returns 菜单树接口 api
+ */
+export const MENULIST_API = (role: Role): string => `/menuList?role=${role}`;
