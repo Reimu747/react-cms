@@ -1,0 +1,34 @@
+.container {
+    width: 80rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: center;
+
+    .drag {
+        width: 25rem;
+        height: 10rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+        background-color: aqua;
+        border: 3px solid orange;
+        text-align: center;
+        line-height: 10rem;
+        font-weight: 700;
+
+        cursor: grab;
+
+        &A {
+            line-height: normal;
+        }
+
+        .stop {
+            width: 50%;
+            height: 50%;
+            background-color: red;
+            margin: 2rem auto;
+
+            cursor: not-allowed;
+        }
+    }
+}

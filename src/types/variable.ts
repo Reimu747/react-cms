@@ -7,7 +7,7 @@ export const GUEST_ROLE: Role = 'guest';
 export const ADMIN_ROLE: Role = 'admin';
 export const SUPER_ADMIN_ROLE: Role = 'superAdmin';
 // 角色权限表
-const GUEST_PERMISSIONS: PageUrl[] = ['/homepage', '/rolepage/guestpage', '/about', '/404'];
+const GUEST_PERMISSIONS: PageUrl[] = ['/homepage', '/rolepage/guestpage', '/UI/dragpage', '/about', '/404'];
 export const ROLE_MAP: RoleMapElementImpl[] = [
     {
         role: 'guest',
@@ -40,6 +40,8 @@ export const ROUTER_MAP: { label: string; key: string }[] = [
     { label: '游客页', key: '/guestpage' },
     { label: '管理员页', key: '/adminpage' },
     { label: '超级管理员页', key: '/superadminpage' },
+    { label: '组件', key: '/UI' },
+    { label: '拖拽', key: '/dragpage' },
     { label: '关于', key: '/about' },
 ];
 

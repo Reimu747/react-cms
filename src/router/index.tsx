@@ -10,6 +10,7 @@ const GuestPage = lazy(() => import('@/view/RolePage/GuestPage'));
 const AdminPage = lazy(() => import('@/view/RolePage/AdminPage'));
 const SuperAdminPage = lazy(() => import('@/view/RolePage/SuperAdminPage'));
 const NotFoundPage = lazy(() => import('@/view/NotFound'));
+const DragPage = lazy(() => import('@/view/UI/DragPage'));
 
 const withLoadingComponent = (component: JSX.Element) => (
     <Suspense fallback={<div>Loading...</div>}>{component}</Suspense>
@@ -28,6 +29,7 @@ const router: Router[] = [
             { path: '/rolepage/guestpage', element: withLoadingComponent(<GuestPage />) },
             { path: '/rolepage/adminpage', element: withLoadingComponent(<AdminPage />) },
             { path: '/rolepage/superadminpage', element: withLoadingComponent(<SuperAdminPage />) },
+            { path: '/UI/dragpage', element: withLoadingComponent(<DragPage />) },
             { path: '/about', element: withLoadingComponent(<About />) },
             { path: '/404', element: withLoadingComponent(<NotFoundPage />) },
         ],

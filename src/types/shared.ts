@@ -9,6 +9,7 @@ export type PageUrl =
     | '/rolepage/guestpage'
     | '/rolepage/adminpage'
     | '/rolepage/superadminpage'
+    | '/UI/dragpage'
     | '/about'
     | '/login'
     | '/404'
