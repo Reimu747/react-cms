@@ -22,6 +22,13 @@
             line-height: normal;
         }
 
+        &B {
+            line-height: normal;
+            background-color: red;
+
+            cursor: not-allowed;
+        }
+
         .stop {
             width: 50%;
             height: 50%;
@@ -29,6 +36,15 @@
             margin: 2rem auto;
 
             cursor: not-allowed;
+        }
+
+        .allow {
+            width: 50%;
+            height: 50%;
+            background-color: aqua;
+            margin: 2rem auto;
+
+            cursor: grab;
         }
     }
 }

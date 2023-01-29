@@ -2,28 +2,30 @@ import { useRef, useState, useEffect, RefObject } from 'react';
 
 interface OptionImpl {
     // 水平方向能否拖拽
-    canX: boolean,
+    canX: boolean;
     // 垂直方向能否拖拽
-    canY: boolean,
+    canY: boolean;
     // 左侧最大拖拽偏移量，最大为 0
-    leftMaxOffset: number,
+    leftMaxOffset: number;
     // 右侧最大拖拽偏移量，最小为 0
-    rightMaxOffset: number,
+    rightMaxOffset: number;
     // 上侧最大拖拽偏移量，最大为 0
-    upMaxOffset: number,
+    upMaxOffset: number;
     // 下侧最大拖拽偏移量，最小为 0
-    downMaxOffset: number,
+    downMaxOffset: number;
 }
 
 interface ReturnImpl {
-    // 应用拖拽 DOM 元素
-    draggableRef: RefObject<HTMLDivElement>,
-    // 禁止响应拖拽的 DOM 元素
-    preventRef: RefObject<HTMLDivElement>,
+    // 相应拖拽事件的 DOM 元素，不使用 moveRef 时，也作为实际移动的 DOM 元素
+    dragRef: RefObject<HTMLDivElement>;
+    // 通过阻止冒泡，禁止响应拖拽事件的 DOM 元素
+    preventRef: RefObject<HTMLDivElement>;
+    // 实际移动的 DOM 元素
+    moveRef: RefObject<HTMLDivElement>;
     // x 偏移量
-    offsetX: number,
+    offsetX: number;
     // y 偏移量
-    offsetY: number,
+    offsetY: number;
 }
 
 const defaultOptions: OptionImpl = {
@@ -33,16 +35,17 @@ const defaultOptions: OptionImpl = {
     rightMaxOffset: Infinity,
     upMaxOffset: -Infinity,
     downMaxOffset: Infinity,
-}
+};
 
 /**
  * 拖拽hook
  * @param options 拖拽配置参数
- * @returns 
+ * @returns
  */
 export const useDrag = (options?: Partial<OptionImpl>): ReturnImpl => {
     const ref = useRef<HTMLDivElement>(null);
     const preventRef = useRef<HTMLDivElement>(null);
+    const moveRef = useRef<HTMLDivElement>(null);
     const [offsetX, setOffsetX] = useState<number>(0);
     const [offsetY, setOffsetY] = useState<number>(0);
     const { canX, canY, leftMaxOffset, rightMaxOffset, upMaxOffset, downMaxOffset } = { ...defaultOptions, ...options };
@@ -69,17 +72,20 @@ export const useDrag = (options?: Partial<OptionImpl>): ReturnImpl => {
             };
 
             const move = (event: MouseEvent): void => {
-                if (ref.current) {
-                    let offsetX: number = setOffset(canX, leftMaxOffset, rightMaxOffset, event.pageX - x);
-                    let offsetY: number = setOffset(canY, upMaxOffset, downMaxOffset, event.pageY - y);
+                let offsetX: number = setOffset(canX, leftMaxOffset, rightMaxOffset, event.pageX - x);
+                let offsetY: number = setOffset(canY, upMaxOffset, downMaxOffset, event.pageY - y);
+                if (moveRef.current) {
+                    moveRef.current.style.translate = `${offsetX}px ${offsetY}px`;
+                } else if (ref.current) {
                     ref.current.style.translate = `${offsetX}px ${offsetY}px`;
-                    setOffsetX(offsetX);
-                    setOffsetY(offsetY);
                 }
+                setOffsetX(offsetX);
+                setOffsetY(offsetY);
             };
 
             const onMouseDown = (event: MouseEvent): void => {
-                const arr: string[] = getComputedStyle(current).translate.split('px');
+                const {current} = moveRef.current ? moveRef : ref;
+                const arr: string[] = getComputedStyle(current!).translate.split('px');
                 const translateX: number = isNaN(+arr[0]) ? 0 : +arr[0];
                 const translateY: number = isNaN(+arr[1]) ? 0 : +arr[1];
                 x = event.pageX - translateX;
@@ -115,8 +121,9 @@ export const useDrag = (options?: Partial<OptionImpl>): ReturnImpl => {
     }, []);
 
     return {
-        draggableRef: ref,
+        dragRef: ref,
         preventRef,
+        moveRef,
         offsetX,
         offsetY,
     };
