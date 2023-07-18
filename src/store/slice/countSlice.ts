@@ -1,19 +1,21 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CounterStateImpl {
-    count: number,
+    count: number;
 }
 
 const initialState: CounterStateImpl = {
     count: 0,
-}
+};
 
 export const countSlice = createSlice({
     name: 'count',
     initialState,
     reducers: {
-        increment: (state, action: PayloadAction<number>) => void(setTimeout(() => state.count += action.payload)),
-    }
+        increment: (state, action: PayloadAction<number>): void => {
+            state.count += action.payload;
+        },
+    },
 });
 
 export const { increment } = countSlice.actions;

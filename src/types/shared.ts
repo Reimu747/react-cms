@@ -10,6 +10,7 @@ export type PageUrl =
     | '/rolepage/adminpage'
     | '/rolepage/superadminpage'
     | '/UI/dragpage'
+    | '/businesscomponents/query'
     | '/about'
     | '/login'
     | '/404'

@@ -7,7 +7,14 @@ export const GUEST_ROLE: Role = 'guest';
 export const ADMIN_ROLE: Role = 'admin';
 export const SUPER_ADMIN_ROLE: Role = 'superAdmin';
 // 角色权限表
-const GUEST_PERMISSIONS: PageUrl[] = ['/homepage', '/rolepage/guestpage', '/UI/dragpage', '/about', '/404'];
+const GUEST_PERMISSIONS: PageUrl[] = [
+    '/homepage',
+    '/rolepage/guestpage',
+    '/UI/dragpage',
+    '/businesscomponents/query',
+    '/about',
+    '/404',
+];
 export const ROLE_MAP: RoleMapElementImpl[] = [
     {
         role: 'guest',
@@ -42,6 +49,8 @@ export const ROUTER_MAP: { label: string; key: string }[] = [
     { label: '超级管理员页', key: '/superadminpage' },
     { label: '组件', key: '/UI' },
     { label: '拖拽', key: '/dragpage' },
+    { label: '业务组件', key: '/businesscomponents' },
+    { label: '分页查询', key: '/query' },
     { label: '关于', key: '/about' },
 ];
 
@@ -56,3 +65,5 @@ export const LOGIN_API = '/login';
  * @returns 菜单树接口 api
  */
 export const MENULIST_API = (role: Role): string => `/menuList?role=${role}`;
+// 列表分页接口
+export const GETLIST_API: string = '/getList';
